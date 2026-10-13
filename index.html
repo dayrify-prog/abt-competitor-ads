@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABT Competitor Ad Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Readex+Pro:wght@500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: ledger-style board — header summary, service tabs, ruled rows of ads, then patterns/opportunities */
+:root{
+  --bg:#F3F6F5; --surface:#FFFFFF; --fg:#13211E; --muted:#5A6A66; --line:#D9E2DF;
+  --accent:#0E6A5A; --accent-soft:#E2F0EC;
+  --meta:#1D5FD1; --meta-soft:#E6EEFC; --li:#0A66C2; --li-soft:#E3EFF9;
+  --video:#B4471E; --video-soft:#FBEBE3; --design:#5B4BB0; --design-soft:#ECE9F8;
+  --display:"Readex Pro","IBM Plex Sans Arabic",system-ui,sans-serif;
+  --body:"IBM Plex Sans Arabic",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E1614; --surface:#15201D; --fg:#E4ECE9; --muted:#97A8A3; --line:#26332F;
+  --accent:#5CC8B0; --accent-soft:#16302A;
+  --meta:#8AB0F5; --meta-soft:#1A2640; --li:#7DB6EA; --li-soft:#14283A;
+  --video:#F0A07E; --video-soft:#3A2017; --design:#B6AAF0; --design-soft:#251F40; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1614; --surface:#15201D; --fg:#E4ECE9; --muted:#97A8A3; --line:#26332F;
+  --accent:#5CC8B0; --accent-soft:#16302A;
+  --meta:#8AB0F5; --meta-soft:#1A2640; --li:#7DB6EA; --li-soft:#14283A;
+  --video:#F0A07E; --video-soft:#3A2017; --design:#B6AAF0; --design-soft:#251F40; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.65;padding-inline:16px;padding-block:28px 56px}
+.wrap{max-width:1080px;margin-inline:auto;display:grid;gap:28px}
+header{display:grid;gap:10px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--accent);direction:ltr;text-align:right}
+h1{font-family:var(--display);font-size:clamp(24px,4vw,34px);line-height:1.25;margin:0;text-wrap:balance}
+.lede{color:var(--muted);margin:0;max-width:70ch}
+.facts{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:var(--muted)}
+.facts b{color:var(--fg);font-weight:600}
+nav.tabs{display:flex;flex-wrap:wrap;gap:8px;border-bottom:1px solid var(--line);padding-bottom:12px}
+.tab{font:inherit;font-weight:600;background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:7px 16px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.tab:focus-visible,.chip:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tab .n{font-family:var(--mono);font-size:12px;opacity:.75;margin-inline-start:6px}
+.filters{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px;color:var(--muted)}
+.chip{font:inherit;font-size:13px;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:4px 10px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+section.svc{display:grid;gap:18px}
+.svc-head h2{font-family:var(--display);font-size:22px;margin:0}
+.svc-head p{margin:4px 0 0;color:var(--muted);font-size:14px}
+ol.ads{list-style:none;margin:0;padding:0;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+ol.ads li{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:6px 14px;padding:14px 16px;border-top:1px solid var(--line);align-items:start}
+ol.ads li:first-child{border-top:0}
+.num{font-family:var(--mono);color:var(--muted);font-size:13px;padding-top:2px}
+.main{min-width:0;display:grid;gap:4px}
+.who{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center}
+.who strong{font-weight:600}
+.tag{font-size:12px;border-radius:4px;padding:1px 7px;font-weight:500;white-space:nowrap}
+.t-meta{background:var(--meta-soft);color:var(--meta)} .t-li{background:var(--li-soft);color:var(--li)}
+.t-video{background:var(--video-soft);color:var(--video)} .t-design{background:var(--design-soft);color:var(--design)}
+.date{font-family:var(--mono);font-size:12px;color:var(--muted);direction:ltr}
+.hook{margin:0;font-size:14px;direction:ltr;text-align:left;color:var(--fg);unicode-bidi:plaintext}
+.why{margin:0;font-size:13px;color:var(--muted)}
+.open{align-self:center;font-size:13px;font-weight:600;color:var(--accent);text-decoration:none;border:1px solid var(--accent);border-radius:6px;padding:5px 10px;white-space:nowrap}
+.open:hover{background:var(--accent-soft)}
+.empty{padding:18px;color:var(--muted);font-size:14px}
+.insights{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.insights div{min-width:0}
+.insights h3{font-family:var(--display);font-size:16px;margin:0 0 6px}
+.insights ul{margin:0;padding-inline-start:18px;display:grid;gap:6px;font-size:14px}
+.opp h3{color:var(--accent)}
+.note{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px;margin:0}
+@media (max-width:560px){ol.ads li{grid-template-columns:26px minmax(0,1fr)} .open{grid-column:2;justify-self:start}}
+@media (prefers-reduced-motion:no-preference){.tab,.chip,.open{transition:background .15s,color .15s}}
+
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tools input{font:inherit;font-size:14px;flex:1 1 220px;min-width:0;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:7px 12px}
+.tools input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.btn{font:inherit;font-size:13px;font-weight:600;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:7px 12px;cursor:pointer}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.stats{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:13px;color:var(--muted)}
+.stats b{color:var(--fg);font-family:var(--mono)}
+.acts{display:flex;flex-direction:column;gap:6px;align-self:center}
+.copy{font:inherit;font-size:12px;background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:4px 10px;cursor:pointer;white-space:nowrap}
+.copy:hover{color:var(--fg)}
+@media (max-width:560px){.acts{grid-column:2;flex-direction:row}}
+
+:root[data-theme="dark"]{--bg:#080c13;--surface:#101722;--fg:#eaf0fa;--muted:#94a3ba;--line:#263246;--accent:#74e0c0;--accent-soft:#152e2d}
+html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 85% 0%,#13313980,transparent 45%),radial-gradient(ellipse at 0% 30%,#24234a66,transparent 45%),var(--bg);background-attachment:fixed;padding-top:32px}.wrap{max-width:1200px;gap:24px}header{position:relative;padding:36px;border:1px solid var(--line);border-radius:24px;overflow:hidden;background:linear-gradient(120deg,#13243199,#101722)}header:before{content:"";position:absolute;width:270px;height:270px;left:-90px;top:-160px;background:#74e0c027;border-radius:50%;filter:blur(30px);pointer-events:none}h1{font-size:clamp(28px,4vw,46px);max-width:850px;margin:8px 0 12px}.eyebrow{font-size:11px}.facts{border-top:1px solid var(--line);padding-top:20px;margin-top:14px}.tabs{position:sticky;top:0;z-index:5;background:#080c13e8;backdrop-filter:blur(18px);padding:16px 0}.tab{padding:12px 20px}.tab[aria-selected="true"]{background:var(--accent);color:#071812;border-color:var(--accent);box-shadow:0 0 25px #74e0c022}.filters,.tools{padding:0 4px}.tools input{padding:14px 18px;border-radius:12px}.btn,.chip{border-radius:10px;padding:10px 14px}.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.stats span{display:flex;flex-direction:column;padding:18px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(140deg,#14202d,var(--surface));font-size:12px}.stats b{font-size:28px;color:var(--accent)}ol.ads{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;background:none;border:0}ol.ads li{position:relative;grid-template-columns:28px minmax(0,1fr);padding:24px;background:linear-gradient(140deg,#152030,var(--surface));border:1px solid var(--line)!important;border-radius:18px;transition:transform .25s,border-color .25s,box-shadow .25s;animation:appear .45s both;animation-delay:calc(var(--i,0)*35ms)}ol.ads li:hover{transform:translateY(-5px);border-color:#74e0c080!important;box-shadow:0 16px 40px #0005}.num{color:var(--accent)}.main{gap:14px}.who{gap:8px}.who strong{width:100%;font-size:17px}.hook{font-size:15px;line-height:1.8}.why{border-top:1px solid var(--line);padding-top:12px}.acts{grid-column:2;flex-direction:row;flex-wrap:wrap;margin-top:14px}.open,.copy{padding:9px 12px;border-radius:9px}.insights>div{background:var(--surface);border:1px solid var(--line);padding:24px;border-radius:18px}.insights h3{margin-bottom:18px}.insights li{line-height:1.9}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}.metric{padding:16px;background:#ffffff04;border:1px solid var(--line);border-radius:14px}.metric b{display:block;font-family:var(--mono);font-size:30px;color:var(--accent)}.metric span{font-size:12px;color:var(--muted)}.save[aria-pressed="true"]{color:var(--accent);border-color:var(--accent)}.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,30px);background:var(--accent);color:#081812;padding:12px 24px;border-radius:12px;opacity:0;transition:.25s;z-index:20;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}.progress{height:3px;background:var(--accent);position:fixed;top:0;right:0;z-index:30;width:0}.backtop{position:fixed;bottom:22px;right:22px;border-radius:50%;width:45px;height:45px}.empty{grid-column:1/-1!important}.view-list ol.ads{grid-template-columns:1fr}.view-list ol.ads li{grid-template-columns:28px minmax(0,1fr) auto}.view-list .acts{grid-column:3}.insights details summary{cursor:pointer;font-family:var(--display);margin-bottom:16px;color:var(--accent)}@keyframes appear{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@media(max-width:700px){header{padding:24px}ol.ads{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}.metrics{gap:8px}.metric{padding:12px}.tab{font-size:12px;padding:10px 12px}.view-list ol.ads li{grid-template-columns:28px minmax(0,1fr)}.view-list .acts{grid-column:2}.eyebrow{overflow-wrap:anywhere}}@media(prefers-reduced-motion:reduce){*,*:before{animation:none!important;transition:none!important;scroll-behavior:auto!important}}@media print{body{background:white;color:black}.tools,.filters,.tabs,.backtop,.progress{display:none}ol.ads{grid-template-columns:1fr}ol.ads li,header,.stats span,.insights>div{background:white;color:black;break-inside:avoid}.hook,.why,.facts,.lede{color:#222}}
+</style>
+</head>
+<body><div class="progress" id="progress"></div><div class="toast" id="toast" role="status" aria-live="polite"></div><button class="btn backtop" aria-label="العودة لأعلى" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<div class="wrap" dir="rtl">
+  <header>
+    <div class="eyebrow">tax-agency.ae · Meta Ad Library + LinkedIn Ad Library · UAE · Oct 2026</div>
+    <h1>إعلانات منافسين ABT على ميتا ولينكدإن</h1>
+    <p class="lede">30 إعلان من منافسين في الإمارات، 10 لكل خدمة: المراجعة الخارجية، الفوترة الإلكترونية، والضرائب. كل إعلان معاه لينك مباشر في مكتبة الإعلانات تقدر تفتح منه التصميم أو الفيديو.</p>
+    <div class="facts">
+      <span>العميل: <b>ABT Bookkeeping &amp; Taxation – دبي</b></span>
+      <span>الدولة: <b>الإمارات</b></span>
+      <span>تاريخ السحب: <b>13 أكتوبر 2026</b></span>
+      <span>المصدر: <b>مكتبات الإعلانات الرسمية</b></span>
+    </div>
+<div class="metrics"><div class="metric"><b>30</b><span>إعلان في البحث</span></div><div class="metric"><b>03</b><span>خدمات محل التحليل</span></div><div class="metric"><b>02</b><span>منصات إعلانية</span></div></div>  </header>
+
+  <nav class="tabs" role="tablist" aria-label="الخدمات">
+    <button class="tab" role="tab" id="tab-audit" data-svc="audit" aria-selected="true">المراجعة الخارجية<span class="n">10</span></button>
+    <button class="tab" role="tab" id="tab-einv" data-svc="einv" aria-selected="false">الفوترة الإلكترونية<span class="n">10</span></button>
+    <button class="tab" role="tab" id="tab-tax" data-svc="tax" aria-selected="false">الضرائب (VAT + Corporate Tax)<span class="n">10</span></button>
+  </nav>
+
+  <div class="filters" aria-label="فلترة">
+    <span>المنصة:</span>
+    <button class="chip" id="f-all" data-f="all" aria-pressed="true">الكل</button>
+    <button class="chip" id="f-meta" data-f="Meta" aria-pressed="false">Meta</button>
+    <button class="chip" id="f-li" data-f="LinkedIn" aria-pressed="false">LinkedIn</button>
+    <span style="margin-inline-start:10px">النوع:</span>
+    <button class="chip" id="g-all" data-g="all" aria-pressed="true">الكل</button>
+    <button class="chip" id="g-v" data-g="Video" aria-pressed="false">فيديو</button>
+    <button class="chip" id="g-d" data-g="Design" aria-pressed="false">ديزاين</button>
+  </div>
+
+
+  <div class="tools">
+    <input id="q" type="search" placeholder="ابحث باسم المنافس أو كلمة في الإعلان…" aria-label="بحث">
+    <button class="btn" id="csv">تحميل CSV</button>
+    <button class="btn" id="view">عرض قائمة ☷</button><button class="btn" id="saved" aria-pressed="false">المحفوظات ☆</button><button class="btn" id="reset">إعادة ضبط</button>
+  </div>
+  <div class="stats" id="stats"></div>
+
+  <section class="svc" id="board"></section>
+
+  <p class="note">لينكات ميتا بتفتح صفحة الإعلان في Meta Ad Library (facebook.com/ads/library/?id=…)، ولينكات لينكدإن بتفتح صفحة الإعلان في LinkedIn Ad Library. "بدأ" = تاريخ بداية تشغيل الإعلان كما يظهر في مكتبة ميتا؛ لينكدإن مش بيعرض التاريخ للزوار. إعلانات لينكدإن المكتوب عليها فيديو متصنفة من صفحة نتائج المكتبة، فيُفضّل تأكيدها بفتح اللينك.</p>
+</div>
+
+<script>
+const FB = id => `https://www.facebook.com/ads/library/?id=${id}`;
+const LI = id => `https://www.linkedin.com/ad-library/detail/${id}`;
+const DATA = {
+  audit: {
+    title: "المراجعة الخارجية (External / Statutory Audit)",
+    sub: "شركات مراجعة ومحاسبة بتعلن عن التدقيق القانوني، مواعيد تسليم المناطق الحرة، وباقات مراجعة + ضريبة.",
+    ads: [
+      {adv:"AMCA", p:"Meta", f:"Design", d:"28 Jul 2026", id:"2208329743348852", hook:"Don't wait until the last minute! The DMCC Audit submission deadline is 27 September 2026…", why:"إلحاح بموعد تسليم مراجعة DMCC"},
+      {adv:"A E Y Auditing of Accounts", p:"Meta", f:"Design", d:"8 Jul 2026", id:"1416340330526194", hook:"In Dubai, a timely audit isn't just about numbers. It's the key to keeping your business running smoothly…", why:"زاوية استمرارية البيزنس مش مجرد امتثال"},
+      {adv:"Abdulla Al Mulla Auditing (AM Audit)", p:"Meta", f:"Design", d:"7 Oct 2026", id:"2549394092211561", hook:"Abu Dhabi business owners — is your accounting and compliance under control? AM Audit supports… ✓ External Audit", why:"استهداف جغرافي لأبوظبي + قائمة خدمات"},
+      {adv:"MBG Corporate Services UAE", p:"Meta", f:"Design", d:"14 Sep 2026", id:"2001512217314400", hook:"AUDIT + CORPORATE TAX STARTING AT AED 8,999. ONE EXPERT TEAM. Why manage Audit & Tax separately?", why:"باقة مجمّعة بسعر واضح"},
+      {adv:"SA Consultants", p:"Meta", f:"Video", d:"6 Oct 2026", id:"1073889485264527", hook:"Is your UAE business audit-ready? Avoid costly mistakes & penalties with expert auditing & tax compliance services…", why:"سؤال جاهزية + تخويف من الغرامات"},
+      {adv:"MAT TAX Consultant LLC", p:"Meta", f:"Design", d:"3 Aug 2026", id:"2519665905219399", hook:"UAE Tax & Audit Services Starting From AED 100. Corporate Tax, VAT, Audit…", why:"سعر دخول منخفض جدًا كطُعم"},
+      {adv:"KGRN Chartered Accountants", p:"LinkedIn", f:"Design", d:"—", id:"1473524563", li:true, hook:"Is your business ready for its external audit? Ensure compliance with UAE statutory audit requirements… Book your complimentary audit consultation today.", why:"External Audit صريح + استشارة مجانية"},
+      {adv:"KGRN Chartered Accountants", p:"LinkedIn", f:"Design", d:"—", id:"1473427403", li:true, hook:"Looking for a trusted audit firm in Dubai? Our…", why:"كلمة بحث مباشرة (audit firm in Dubai)"},
+      {adv:"KGRN Chartered Accountants", p:"LinkedIn", f:"Design", d:"—", id:"1566454883", li:true, hook:"An ADGM audit exemption does not remove the…", why:"محتوى توعوي متخصص لشركات ADGM"},
+      {adv:"HLB HAMT", p:"LinkedIn", f:"Design", d:"—", id:"1627063196", li:true, fmt:"Document ad", hook:"Your FY2026 Aggregated Financial Statements audit does not start in month nine… Our CFO handbook sets out the timetable… 20-point readiness check.", why:"Lead magnet (كتيّب CFO) بدل بيع مباشر"}
+    ],
+    patterns:[
+      "الإلحاح بالمواعيد: مواعيد تسليم مراجعة المناطق الحرة (DMCC 27 سبتمبر) ونهاية السنة المالية.",
+      "تسعير ظاهر وباقات: «Audit + CT من AED 8,999»، «من AED 100» لجذب الضغطة الأولى.",
+      "على لينكدإن الشركات الأكبر (HLB, KGRN) بتعلن بمحتوى تعليمي وكتيّبات بدل عرض سعر.",
+      "أغلب إعلانات ميتا تصاميم ثابتة؛ الفيديو قليل جدًا في المراجعة."
+    ],
+    opps:[
+      "فيديو قصير «Checklist جاهزية المراجعة» — المنافسين تقريبًا مفيش عندهم فيديو هنا.",
+      "إعلان موجّه لكل منطقة حرة (DMCC / JAFZA / IFZA) بموعدها، زي AMCA بس أوسع.",
+      "استغلال «200+ Audits» و«FTA-Certified» كإثبات اجتماعي — محدش من المنافسين بيستخدم أرقام إنجاز.",
+      "Lead magnet عربي (دليل المراجعة السنوية) على لينكدإن لأصحاب الشركات والـ CFOs."
+    ]
+  },
+  einv: {
+    title: "الفوترة الإلكترونية (E-Invoicing)",
+    sub: "أكثر خدمة عليها إعلانات حاليًا (~300 إعلان نشط على ميتا في الإمارات). مكاتب استشارات + برامج ASP زي Zoho و Tally و Wafeq.",
+    ads: [
+      {adv:"Suntech Auditors & Consultants", p:"Meta", f:"Design", d:"27 Aug 2026", id:"1402471698487738", hook:"🚨 Still sending PDF invoices? Your customers may receive them… But that doesn't make them compliant", why:"هوك يكسر افتراض شائع (PDF = فاتورة إلكترونية)"},
+      {adv:"AMCA", p:"Meta", f:"Design", d:"15 Sep 2026", id:"1846223323213277", hook:"The shift to e-Invoicing is no longer something businesses can put off. If your business has re…", why:"إلحاح عام بالتحوّل"},
+      {adv:"My Business Consulting DMCC", p:"Meta", f:"Design", d:"8 Sep 2026", id:"1769482200860293", hook:"Still issuing invoices through Excel → PDF → Email? Under UAE e-Invoicing, this process alone w…", why:"بيوصف الألم اليومي للمحاسب"},
+      {adv:"A B Capital Services FZE", p:"Meta", f:"Design", d:"28 Sep 2026", id:"1626057315713804", hook:"Turnover above AED 50 million? Your E-Invoicing deadline is approaching…", why:"استهداف شريحة بالإيراد + موعد"},
+      {adv:"ADAM Global", p:"Meta", f:"Design", d:"22 Sep 2026", id:"1622482852869954", hook:"UAE e-invoicing is coming, and every business will eventually need to comply — some sooner than…", why:"«الكل هيلتزم» يوسّع الجمهور"},
+      {adv:"MAT TAX Consultant LLC", p:"Meta", f:"Design", d:"8 Oct 2026", id:"1419548543669764", hook:"FREE E-INVOICING SETUP + YOUR FIRST 100 E-INVOICES FREE!", why:"عرض مجاني ملموس"},
+      {adv:"Zoho Books", p:"Meta", f:"Video", d:"23 Sep 2026", id:"1778282800113287", hook:"The UAE eInvoicing mandate is on the way, and every business needs an…", why:"برنامج ASP — منافس غير مباشر على نفس الجمهور"},
+      {adv:"HLB HAMT", p:"LinkedIn", f:"Video", d:"—", id:"1538102056", li:true, hook:"The future of invoicing is digital, and prepa…", why:"شركة مراجعة كبيرة بتبيع الجاهزية"},
+      {adv:"KGRN Chartered Accountants", p:"LinkedIn", f:"Video", d:"—", id:"1577180283", li:true, hook:"Is your business ready for UAE eInvoicing…", why:"سؤال جاهزية بفيديو"},
+      {adv:"AYS Advisors", p:"LinkedIn", f:"Video", d:"—", id:"1637468386", li:true, hook:"🇦🇪 UAE E-Invoicing Made Easy", why:"وعد بالبساطة"}
+    ],
+    patterns:[
+      "هوك «لسه بتبعت PDF / Excel؟» متكرر عند أكتر من منافس — بيضرب على عادة يومية.",
+      "استهداف بالشريحة والموعد: «إيراد فوق AED 50 مليون».",
+      "عروض مجانية (Setup مجاني + أول 100 فاتورة) لتقليل الحاجز.",
+      "برامج الـ ASP (Zoho, Tally, Wafeq) مسيطرة على الفيديو؛ مكاتب الاستشارات أغلبها تصاميم ثابتة."
+    ],
+    opps:[
+      "ABT تقدر تتموضع «شريك التطبيق» المحايد: نختار معاك الـ ASP ونربطه بحساباتك — المكاتب مش بتقول ده بوضوح.",
+      "فيديو عربي قصير يشرح الجدول الزمني ومين ملزم إمتى — أغلب الإعلانات إنجليزي.",
+      "Readiness Assessment مجاني 30 دقيقة (موجود أصلًا في عرض ABT) كـ CTA.",
+      "Carousel «5 أخطاء تخلي فاتورتك غير مطابقة» بدل الإعلان العام."
+    ]
+  },
+  tax: {
+    title: "الضرائب (Corporate Tax + VAT)",
+    sub: "أغلب الإعلانات بتدور حول موعد إقرار الضريبة على الشركات 30 سبتمبر، والفرق بين VAT و CT، وتجنّب الغرامات.",
+    ads: [
+      {adv:"Shuraa Tax Consultants", p:"Meta", f:"Video", d:"27 Jul 2026", id:"1604016907776537", hook:"Get expert guidance on all your UAE taxation and a…", why:"براند معروف + فيديو عام للخدمات"},
+      {adv:"Al Riyady Auditing", p:"Meta", f:"Video", d:"19 Aug 2026", id:"935465739598901", hook:"UAE Corporate Tax Filing Due? ⏳ Stay compliant and…", why:"إلحاح بموعد الإقرار"},
+      {adv:"Finhub Middle East", p:"Meta", f:"Video", d:"18 Sep 2026", id:"2169996260604584", hook:"⚠️ Do not confuse UAE VAT with Corporate Tax! Miss…", why:"فيديو توعوي يصحّح لخبطة شائعة"},
+      {adv:"Unicorn Global Solutions", p:"Meta", f:"Video", d:"30 Jun 2026", id:"1886996015326348", hook:"⏰ Corporate Tax filing deadline is 30th September…", why:"عدّاد موعد"},
+      {adv:"FinAxis Accounting & Tax", p:"Meta", f:"Video", d:"17 Jun 2026", id:"1539073227897283", hook:"هل تواجه غرامات ضريبية أو تخشى الوقوع في مخالفات…", why:"من القلائل اللي بيعلنوا بالعربي"},
+      {adv:"Sella Tax Dubai", p:"Meta", f:"Video", d:"25 Aug 2026", id:"1960713567979861", hook:"Know your tax. Avoid penalties. Choose Sella Tax…", why:"رسالة قصيرة مباشرة"},
+      {adv:"AMCA", p:"Meta", f:"Design", d:"7 Sep 2026", id:"1430642882254078", hook:"Is your business ready for the 30 September 2026 Corporate Tax…", why:"موعد محدد بالتاريخ"},
+      {adv:"Smart Zone Tax & Accounting", p:"Meta", f:"Design", d:"26 Aug 2026", id:"1031280249703460", hook:"Managing VAT, corporate tax and bookkeeping can ta…", why:"ألم الوقت والمجهود"},
+      {adv:"HFA Consulting", p:"LinkedIn", f:"Design", d:"—", id:"1566284503", li:true, hook:"Corporate Tax Return Deadline…", why:"موعد الإقرار على لينكدإن"},
+      {adv:"MDC Consulting", p:"LinkedIn", f:"Design", d:"—", id:"1566648743", li:true, hook:"Free Zone Companies: New Com[pliance]…", why:"استهداف شركات المناطق الحرة"}
+    ],
+    patterns:[
+      "موعد 30 سبتمبر لإقرار الضريبة على الشركات هو محور أغلب الإعلانات (عدّادات وتحذيرات).",
+      "الفيديو هو الفورمات الغالب في الضرائب على ميتا، بعكس المراجعة.",
+      "التخويف من الغرامات + تصحيح المفاهيم (VAT ≠ CT).",
+      "قليل جدًا اللي بيعلن بالعربي (FinAxis)، وفيه منافسين بيستهدفوا الجالية الهندية بالمالايالامي."
+    ],
+    opps:[
+      "إعلان Case Study: «وفّرنا على شركة منطقة حرة +AED 100,000 ضريبة غير مستحقة» — مفيش منافس بيعرض نتيجة رقمية.",
+      "زاوية «0% للمناطق الحرة (QFZP)» بفيديو قصير — عليها سؤال كبير وإعلانات قليلة.",
+      "CTA واتساب + «خبير معتمد من FTA يرد خلال 24 ساعة» — نقطة قوة واضحة عند ABT.",
+      "محتوى بعد موعد الإقرار (تعديلات، غرامات تأخير، إعادة تقديم) — المنافسين بيقفوا بعد 30 سبتمبر."
+    ]
+  }
+};
+
+let favorites = new Set(); try { favorites = new Set(JSON.parse(localStorage.getItem("abt-favorites")||"[]")); } catch(e) {}
+let savedOnly=false;
+let svc = "audit", fP = "all", fG = "all", q = "";
+try { const h = location.hash.replace('#',''); if (DATA[h]) svc = h; } catch(e){}
+
+function render(){
+  const s = DATA[svc];
+  const list = s.ads.map((a,i)=>({...a,n:i+1})).filter(a=>(fP==="all"||a.p===fP)&&(fG==="all"||a.f===fG)&&(!savedOnly||favorites.has(a.id))&&(!q||(a.adv+' '+a.hook+' '+a.why).toLowerCase().includes(q)));
+  window.__cur = list;
+  const cnt=(k,v)=>s.ads.filter(a=>a[k]===v).length;
+  document.getElementById('stats').innerHTML=`<span>معروض: <b>${list.length}</b> من ${s.ads.length}</span><span>Meta: <b>${cnt('p','Meta')}</b></span><span>LinkedIn: <b>${cnt('p','LinkedIn')}</b></span><span>فيديو: <b>${cnt('f','Video')}</b></span><span>ديزاين: <b>${cnt('f','Design')}</b></span>`;
+  const rows = list.length ? list.map(a=>{
+    const url = a.li ? LI(a.id) : FB(a.id);
+    return `<li style="--i:${a.n-1}">
+      <span class="num">${String(a.n).padStart(2,'0')}</span>
+      <div class="main">
+        <div class="who"><strong>${a.adv}</strong>
+          <span class="tag ${a.p==='Meta'?'t-meta':'t-li'}">${a.p}</span>
+          <span class="tag ${a.f==='Video'?'t-video':'t-design'}">${a.f==='Video'?'فيديو':(a.fmt? 'Document' : 'ديزاين')}</span>
+          ${a.d!=="—"?`<span class="date">بدأ ${a.d}</span>`:''}
+        </div>
+        <p class="hook">${a.hook}</p>
+        <p class="why">${a.why}</p>
+      </div>
+      <div class="acts"><a class="open" href="${url}" target="_blank" rel="noopener">افتح الإعلان ↗</a><button class="copy save" data-id="${a.id}" aria-pressed="${favorites.has(a.id)}">${favorites.has(a.id)?'محفوظ ★':'احفظ ☆'}</button><button class="copy" data-url="${url}">انسخ اللينك</button></div>
+    </li>`}).join('') : `<li class="empty">مفيش إعلانات بالفلتر ده في الخدمة دي.</li>`;
+  document.getElementById('board').innerHTML = `
+    <div class="svc-head"><h2>${s.title}</h2><p>${s.sub}</p></div>
+    <ol class="ads">${rows}</ol>
+    <div class="insights">
+      <div><h3>الأنماط عند المنافسين</h3><ul>${s.patterns.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+      <div class="opp"><h3>فرص لـ ABT</h3><ul>${s.opps.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+    </div>`;
+  location.hash=svc;
+  document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected', t.dataset.svc===svc));
+  document.querySelectorAll('[data-f]').forEach(c=>c.setAttribute('aria-pressed', c.dataset.f===fP));
+  document.querySelectorAll('[data-g]').forEach(c=>c.setAttribute('aria-pressed', c.dataset.g===fG));
+}
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{svc=t.dataset.svc;render();}));
+document.querySelectorAll('[data-f]').forEach(c=>c.addEventListener('click',()=>{fP=c.dataset.f;render();}));
+document.querySelectorAll('[data-g]').forEach(c=>c.addEventListener('click',()=>{fG=c.dataset.g;render();}));
+document.getElementById('q').addEventListener('input',e=>{q=e.target.value.trim().toLowerCase();render();});
+document.getElementById('board').addEventListener('click',e=>{const b=e.target.closest('.copy'); if(!b) return; const u=b.dataset.url;
+  const done=()=>{b.textContent='اتنسخ ✓'; setTimeout(()=>b.textContent='انسخ اللينك',1400);};
+  if(navigator.clipboard){navigator.clipboard.writeText(u).then(done).catch(()=>{prompt('انسخ اللينك:',u);});} else {prompt('انسخ اللينك:',u);} });
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800);}
+document.getElementById('board').addEventListener('click',e=>{const b=e.target.closest('.save');if(!b)return;favorites.has(b.dataset.id)?favorites.delete(b.dataset.id):favorites.add(b.dataset.id);try{localStorage.setItem('abt-favorites',JSON.stringify([...favorites]));}catch(e){}render();toast('تم تحديث المحفوظات');});
+document.getElementById('view').onclick=e=>{document.body.classList.toggle('view-list');e.target.textContent=document.body.classList.contains('view-list')?'عرض بطاقات ▦':'عرض قائمة ☷';};
+document.getElementById('saved').onclick=e=>{savedOnly=!savedOnly;e.target.setAttribute('aria-pressed',savedOnly);render();};
+document.getElementById('reset').onclick=()=>{q='';fP=fG='all';savedOnly=false;document.getElementById('q').value='';document.getElementById('saved').setAttribute('aria-pressed','false');render();};
+window.addEventListener('scroll',()=>{const total=document.documentElement.scrollHeight-innerHeight;document.getElementById('progress').style.width=(total>0?scrollY/total*100:0)+'%';},{passive:true});
+window.addEventListener('hashchange',()=>{const k=location.hash.slice(1);if(DATA[k]&&k!==svc){svc=k;render();}});
+document.querySelector('.tabs').addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight'].includes(e.key))return;e.preventDefault();const tabs=[...document.querySelectorAll('.tab')];let i=tabs.findIndex(t=>t.dataset.svc===svc);i=(i+(e.key==='ArrowLeft'?1:2))%3;tabs[i].focus();tabs[i].click();});
+document.getElementById('csv').addEventListener('click',()=>{
+  const rows=[["Service","#","Competitor","Platform","Format","Started","Hook","Angle","Link"]];
+  for(const [k,s] of Object.entries(DATA)) s.ads.forEach((a,i)=>rows.push([s.title,i+1,a.adv,a.p,a.f,a.d,a.hook,a.why,a.li?LI(a.id):FB(a.id)]));
+  const csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  const a=document.createElement('a'); a.href=url; a.download='ABT-competitor-ads.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1000);});
+render();
+</script>
+</body>
+</html>
